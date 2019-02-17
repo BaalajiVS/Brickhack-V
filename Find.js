@@ -89,7 +89,7 @@
                 // your replacement function, change URL accordingly
                 function (match) {
                   var link = document.createElement('a');
-                  link.href = 'http://google.com/#q=' + match;
+                  link.href = 'http://www.wegmans.com/search.html?searchKey=' + match;
                   link.target = '_blank';
                   link.innerHTML = match;
                   return link;
