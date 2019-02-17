@@ -60,21 +60,41 @@
 
     for(var i = 0; i < replTerms.length; i++){
         var replTerm = replTerms[i];
-        findKW(
-            document.body,
-
-            // using \\b to only replace when the term is the whole word
-            // e.g. if term is "bbb" then "aabbbccc" will not match
-            new RegExp('\\b(' + replTerm + ')\\b', 'g'),
-
-            // your replacement function, change URL accordingly
-            function (match) {
-              var link = document.createElement('a');
-              link.href = 'http://google.com/#q=' + match;
-              link.target = '_blank';
-              link.innerHTML = match;
-              return link;
+        var valid = true;
+        //https://www.kirupa.com/html5/making_http_requests_js.htm
+        var xhr = new XMLHttpRequest();
+        var query = replTerm;
+        var key = "bb8e2c00b2424ba8b09b7978b504a0da";
+        xhr.open('GET', "https://api.wegmans.io/products/search?query="+ query +"&api-version=2018-10-18&subscription-key=" + key, true);
+        xhr.send();
+        xhr.onreadystatechange = processRequest;
+        function processRequest(e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = JSON.parse(xhr.responseText);
+                var results = response.results;
+                if (results.length==0){
+                    valid = false;
+                }
             }
-        );
+        }
+        if (valid){
+            console.log("Choosen word : " + replTerm);
+            findKW(
+                document.body,
+
+                // using \\b to only replace when the term is the whole word
+                // e.g. if term is "bbb" then "aabbbccc" will not match
+                new RegExp('\\b(' + replTerm + ')\\b', 'g'),
+
+                // your replacement function, change URL accordingly
+                function (match) {
+                  var link = document.createElement('a');
+                  link.href = 'http://google.com/#q=' + match;
+                  link.target = '_blank';
+                  link.innerHTML = match;
+                  return link;
+                }
+            );
+        }
     }
 }());
