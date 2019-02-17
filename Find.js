@@ -73,7 +73,18 @@
             for (var i = 0; i < text.length; i += 1){
                 if (text[i].length>1){
                     if (!(text[i] in stopwords)){
-                        words.push(text[i]);
+                        var xmlHttp = new XMLHttpRequest();
+
+                        var query = text[i];
+                        var Key = "bb8e2c00b2424ba8b09b7978b504a0da";
+                        var theUrl = "https://api.wegmans.io/products/search?query=" + query + "&api-version=2018-10-18&subscription-key=" + Key;
+                        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+                        xmlHttp.send(null);
+                        var headers = xmlHttp.getAllResponseHeaders();
+                        console.log(text[i],headers);
+                        if (headers.length>0){
+                            words.push(text[i]);
+                        }
                     }
                 }
             }
@@ -84,7 +95,7 @@
     var displayWordList = function (words) {
         for (var i = 0, length = words.length; i < length; i += 1) {
             //console.log(words[i][0], words[i][1]);
-            console.log(words[i]);
+            //console.log(words[i]);
         }
     };
 
